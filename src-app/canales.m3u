@@ -1,0 +1,40 @@
+#EXTM3U
+
+#EXTINF:-1, ESPN
+https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8
+
+#EXTINF:-1, MOVISTAR
+https://petopa155.caraponi.me/live/plusfutbol/index.m3u8?token=7cYZ2LQ1NxDR2iZkGxc1UQ&expires=1532824597
+
+#EXTINF:-1, DEPORTE1
+https://petopa154.caraponi.me/live/plusdeportes/index.m3u8?token=1_V-1Xq5LasFdRcnAs2IJg&expires=1532824772
+
+#EXTINF:-1, DEPORTE2
+https://petopa155.caraponi.me/live/plusdeportes2/index.m3u8?token=NiYJbg6sxmFmYV_RyGfSNA&expires=1532824936
+
+#EXTINF:-1, la Liga 123
+https://petopa155.caraponi.me/live/liga123/index.m3u8?token=MoNTWq1zrTAUQgYFC3yQFg&expires=1532825051
+
+#EXTINF:-1, bein SPORT Liga
+https://petopa154.caraponi.me/live/verliga/index.m3u8?token=9qg1pRow_vNh9nu4YJUiCA&expires=1532825189
+
+#EXTINF:-1, bein SPORT
+https://petopa153.caraponi.me/live/verliga5/index.m3u8?token=dP6NEdc5tH3XwREIkVzIg&expires=1532825309
+
+#EXTINF:-1, deporte
+https://petopa153.caraponi.me/live/tycsports/index.m3u8?token=3H41rn668LTXD10AVWn31A&expires=1532825550
+
+#EXTINF:-1, RCN
+https://petopa154.caraponi.me/live/rcn/index.m3u8?token=42yAcXcppvVh0npsS30cpw&expires=1532826204
+
+#EXTINF:-1, tdp
+https://petu14.pedromo.me/live/teledeporte/index.m3u8?token=rhy3hR8Jgfzsawg&expires=1532826566
+
+#EXTINF:-1, BEINS SPORT
+https://petopa154.caraponi.me/live/verliga/index.m3u8?token=d8ae9fhzLu6lZzo1oE7JHQ&expires=1532808580
+
+#EXTINF:-1, FOXACTION
+http://live.lcdn.claro.net.co/Content/hls/Live/Channel(FOXACTION_HD)/Stream(01)/index.m3u8
+
+#EXTINF:-1, ESPNdeportes
+http://style.kastream.biz:8081/edge/verdc23b65caee503b9e3c9096c1f3cbbcc/chunks.m3u8?nimblesessionid=7998988&wmsAuthSign=c2VydmVyX3RpbWU9Ny8y0C8yMDE4IDg6MjE6NDkgUE0maGFzaF92YWx1ZT1HajdDVUwvMHRMZWhxNWNsNGp1SGt3PT0mdmFsaWRtaW51dGVzPTEyMA==

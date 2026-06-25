@@ -1,0 +1,90 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  color-scheme: dark;
+}
+
+body {
+  @apply bg-dark-950 text-gray-100;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scrollbar personalizado */
+::-webkit-scrollbar {
+  @apply w-2.5 h-2.5;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-dark-900;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-dark-600 rounded;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-dark-500;
+}
+
+/* Botones personalizados */
+.btn-neon {
+  @apply px-6 py-3 rounded-lg font-bold transition-all duration-300;
+  @apply bg-gradient-to-r from-neon-blue to-neon-purple;
+  @apply text-dark-900 hover:shadow-lg hover:shadow-neon-blue/50;
+  @apply border border-neon-blue;
+}
+
+.btn-neon:hover {
+  @apply -translate-y-1;
+}
+
+.btn-secondary {
+  @apply px-6 py-3 rounded-lg font-bold transition-all duration-300;
+  @apply bg-dark-700 hover:bg-dark-600;
+  @apply border border-dark-600 hover:border-neon-blue/50;
+}
+
+/* Tarjetas */
+.card-dark {
+  @apply bg-dark-800/40 backdrop-blur border border-dark-700/50;
+  @apply hover:border-neon-blue/50 transition-all duration-300;
+}
+
+/* Badge EN VIVO */
+.badge-live {
+  @apply inline-flex items-center gap-2 px-3 py-1 rounded-full;
+  @apply bg-red-900/50 text-red-200 text-sm font-bold;
+  @apply border border-red-600/50;
+}
+
+.pulse-dot {
+  @apply w-2 h-2 bg-red-500 rounded-full;
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Gradientes */
+.gradient-neon {
+  @apply bg-gradient-to-r from-neon-blue via-neon-purple to-neon-pink;
+}
+
+.gradient-hero {
+  @apply bg-gradient-to-b from-neon-blue/10 via-neon-purple/10 to-transparent;
+}
+
+/* Video player */
+video {
+  @apply w-full h-full object-contain;
+}
