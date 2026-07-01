@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import ChannelCard from '@/components/ChannelCard';
-import { API_CONFIG } from '@/lib/api';
+import { API_CONFIG, fetchAPI } from '@/lib/api'; // Añadí fetchAPI para aprovechar tu utilidad
 
 interface Channel {
   id: number;
@@ -14,12 +14,19 @@ interface Channel {
   resolution: string;
 }
 
-const CATEGORIES = ['Todos', 'Fútbol', 'Deportes USA', 'Tenis', 'Baloncesto', 'Películas'];
+// Nueva interfaz para aguantar la orden del backend
+interface EventsResponse {
+  total: number;
+  paises: Record<string, Channel[]>;
+  categorias: Record<string, Channel[]>;
+}
+
+type ViewMode = 'categorias' | 'paises';
 
 export default function Dashboard() {
-  const [channels, setChannels] = useState<Channel[]>([]);
-  const [filteredChannels, setFilteredChannels] = useState<Channel[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState('Todos');
+  const [eventsData, setEventsData] = useState<EventsResponse | null>(null);
+  const [viewMode, setViewMode] = useState<ViewMode>('categorias');
+  const [selectedGroup, setSelectedGroup] = useState<string>('Todos');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [serverStatus, setServerStatus] = useState('offline');
@@ -28,23 +35,20 @@ export default function Dashboard() {
     fetchEvents();
   }, []);
 
+  // Si cambiamos de vista (Paises <-> Categorias), regresamos al tab de "Todos" por defecto
   useEffect(() => {
-    filterChannels();
-  }, [selectedCategory, channels]);
+    setSelectedGroup('Todos');
+  }, [viewMode]);
 
   const fetchEvents = async () => {
     try {
       setLoading(true);
       setError(null);
-      
-      const response = await fetch(`${API_CONFIG.BASE_URL}/api/events`);
-      
-      if (!response.ok) {
-        throw new Error('Error al conectar con el servidor');
-      }
 
-      const data: Channel[] = await response.json();
-      setChannels(data);
+      // ¡Usando tu propio helper de api.ts!
+      const data = await fetchAPI<EventsResponse>('EVENTS');
+
+      setEventsData(data);
       setServerStatus('online');
     } catch (err) {
       setError('No se pudo conectar con el servidor. Verifica que esté ejecutando en puerto 8000.');
@@ -55,23 +59,35 @@ export default function Dashboard() {
     }
   };
 
-  const filterChannels = () => {
-    if (selectedCategory === 'Todos') {
-      setFilteredChannels(channels);
-    } else {
-      setFilteredChannels(channels.filter(ch => ch.category === selectedCategory));
+  // Función para resolver qué canales renderizar
+  const getDisplayChannels = (): Channel[] => {
+    if (!eventsData) return [];
+
+    if (selectedGroup === 'Todos') {
+      // Extraemos todos los canales de la vista actual y filtramos duplicados por ID
+      const allChannels = Object.values(eventsData[viewMode]).flat();
+      const uniqueChannels = Array.from(new Map(allChannels.map(item => [item.id, item])).values());
+      return uniqueChannels;
     }
+
+    // Retorna los canales del grupo específico (ej. "mx" o "Deportes")
+    return eventsData[viewMode][selectedGroup] || [];
   };
+
+  const displayChannels = getDisplayChannels();
+
+  // Extraemos las llaves del JSON dinámicamente para pintar los botones
+  const availableGroups = eventsData ? ['Todos', ...Object.keys(eventsData[viewMode])] : [];
 
   return (
     <div className="min-h-screen bg-dark-950 pt-20 pb-20">
-      {/* Hero Banner */}
+      {/* Hero Banner (Sin cambios, pura belleza neón) */}
       <section className="relative overflow-hidden">
         <div className="gradient-hero h-80 flex items-center justify-center relative">
           <div className="absolute inset-0 opacity-10">
             <div className="absolute inset-0 bg-gradient-to-r from-neon-blue via-neon-purple to-neon-pink"></div>
           </div>
-          
+
           <div className="relative z-10 text-center px-4">
             <h1 className="text-6xl md:text-7xl font-bold mb-4 bg-gradient-to-r from-neon-blue to-neon-purple bg-clip-text text-transparent">
               🌍 MUNDI TV
@@ -95,21 +111,44 @@ export default function Dashboard() {
           </span>
         </div>
 
-        {/* Filtros por categoría */}
+        {/* Controles maestros: ¿Qué queremos ver? */}
+        <div className="mb-8 flex justify-center gap-4">
+          <button
+            onClick={() => setViewMode('categorias')}
+            className={`px-8 py-3 rounded-xl font-bold transition-all duration-300 ${viewMode === 'categorias'
+                ? 'bg-dark-800 text-neon-blue border border-neon-blue shadow-[0_0_15px_rgba(0,255,255,0.3)]'
+                : 'bg-dark-900 text-gray-500 border border-dark-700 hover:text-gray-300'
+              }`}
+          >
+            🗂️ Por Categoría
+          </button>
+          <button
+            onClick={() => setViewMode('paises')}
+            className={`px-8 py-3 rounded-xl font-bold transition-all duration-300 ${viewMode === 'paises'
+                ? 'bg-dark-800 text-neon-purple border border-neon-purple shadow-[0_0_15px_rgba(157,78,221,0.3)]'
+                : 'bg-dark-900 text-gray-500 border border-dark-700 hover:text-gray-300'
+              }`}
+          >
+            🌎 Por País
+          </button>
+        </div>
+
+        {/* Filtros dinámicos */}
         <div className="mb-12">
-          <h2 className="text-2xl font-bold mb-6 text-gray-100">Categorías</h2>
+          <h2 className="text-2xl font-bold mb-6 text-gray-100">
+            Filtros
+          </h2>
           <div className="flex flex-wrap gap-3">
-            {CATEGORIES.map(category => (
+            {availableGroups.map(group => (
               <button
-                key={category}
-                onClick={() => setSelectedCategory(category)}
-                className={`px-6 py-2 rounded-full font-bold transition-all duration-300 ${
-                  selectedCategory === category
+                key={group}
+                onClick={() => setSelectedGroup(group)}
+                className={`px-6 py-2 rounded-full font-bold transition-all duration-300 ${selectedGroup === group
                     ? 'bg-gradient-to-r from-neon-blue to-neon-purple text-dark-950 border-neon-blue shadow-lg shadow-neon-blue/50'
                     : 'bg-dark-800 text-gray-300 border border-dark-700 hover:border-neon-blue/50 hover:text-gray-100'
-                }`}
+                  }`}
               >
-                {category}
+                {group === 'Todos' ? group : group.toUpperCase()}
               </button>
             ))}
           </div>
@@ -132,7 +171,7 @@ export default function Dashboard() {
             <p className="text-red-200 mb-4">{error}</p>
             <button
               onClick={fetchEvents}
-              className="btn-neon"
+              className="px-6 py-2 rounded-full font-bold bg-dark-800 text-gray-300 border border-dark-700 hover:border-neon-blue hover:text-white transition-all"
             >
               🔄 Reintentar
             </button>
@@ -144,24 +183,24 @@ export default function Dashboard() {
           <>
             <div className="mb-6">
               <h2 className="text-2xl font-bold text-gray-100">
-                {selectedCategory === 'Todos' ? 'Todos los Eventos' : selectedCategory}
+                {selectedGroup === 'Todos' ? 'Todos los Eventos' : selectedGroup.toUpperCase()}
               </h2>
               <p className="text-gray-400 mt-2">
-                {filteredChannels.length === 0 
-                  ? 'No hay eventos disponibles en esta categoría' 
-                  : `${filteredChannels.length} canales disponibles`}
+                {displayChannels.length === 0
+                  ? 'No hay eventos disponibles en esta selección'
+                  : `${displayChannels.length} canales disponibles`}
               </p>
             </div>
 
-            {filteredChannels.length > 0 ? (
+            {displayChannels.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {filteredChannels.map(channel => (
+                {displayChannels.map(channel => (
                   <ChannelCard key={channel.id} channel={channel} />
                 ))}
               </div>
             ) : (
               <div className="text-center py-16">
-                <p className="text-gray-400 text-lg">No hay eventos en esta categoría</p>
+                <p className="text-gray-400 text-lg">No hay eventos para mostrar</p>
               </div>
             )}
           </>

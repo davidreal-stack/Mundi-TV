@@ -12,7 +12,7 @@ interface ChannelCardProps {
     time: string;
     category: string;
     status: string;
-    link: string;
+    feed: string;
     resolution: string;
     type?: string;
     content_id?: string;
@@ -42,7 +42,7 @@ export default function ChannelCard({ channel }: ChannelCardProps) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          link: channel.link,
+          link: channel.feed,
         }),
       });
 
@@ -113,11 +113,10 @@ export default function ChannelCard({ channel }: ChannelCardProps) {
         <button
           onClick={handleWatch}
           disabled={loading}
-          className={`w-full py-3 rounded-lg font-bold transition-all duration-300 flex items-center justify-center gap-2 ${
-            loading
-              ? 'bg-dark-700 text-gray-500 cursor-not-allowed'
-              : 'btn-neon'
-          }`}
+          className={`w-full py-3 rounded-lg font-bold transition-all duration-300 flex items-center justify-center gap-2 ${loading
+            ? 'bg-dark-700 text-gray-500 cursor-not-allowed'
+            : 'btn-neon'
+            }`}
         >
           {loading ? (
             <>

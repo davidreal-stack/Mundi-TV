@@ -2,6 +2,18 @@ import time
 import asyncio
 from dataclasses import dataclass
 
+from typing import Dict, Any
+
+# Almacenamiento en memoria para tokens y enlaces
+link_store: Dict[str, str] = {}  # {token: link_original}
+
+# Almacenamiento en memoria para el caché de los eventos M3U
+events_cache: Dict[str, Any] = {
+    "data": [],
+    "last_updated": None
+}
+
+
 @dataclass
 class CacheEntry:
     url: str

@@ -13,7 +13,7 @@ CHANNEL_URLS = {
 
 async def capture_manifest_url(browser_manager, content_id: str) -> str:
     
-    Automatiza Playwright para capturar el manifiesto .mpd con token fresco de TV Azteca.
+    #Automatiza Playwright para capturar el manifiesto .mpd con token fresco de TV Azteca.
 
     target_url = CHANNEL_URLS.get(content_id)
     if not target_url:

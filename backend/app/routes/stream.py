@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Request, HTTPException
-from core.cache import ManifestCache
-from services.dash_capture import capture_manifest_url
+from app.core.cache import ManifestCache
+from app.services.dash_capture import capture_manifest_url
 
 router = APIRouter()
 # Caché de manifiestos con TTL de 300 segundos (5 minutos)

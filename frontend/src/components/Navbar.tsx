@@ -10,11 +10,11 @@ export default function Navbar() {
   useEffect(() => {
     const checkServer = async () => {
       try {
-        const response = await fetch(`${API_CONFIG.BASE_URL}/health`, {
+        const response = await fetch(`${API_CONFIG.BASE_URL}/api/health`, {
           method: 'GET',
           mode: 'cors',
         });
-        
+
         if (response.ok) {
           setServerStatus('online');
         } else {
@@ -27,7 +27,7 @@ export default function Navbar() {
 
     checkServer();
     const interval = setInterval(checkServer, 30000); // Verificar cada 30 segundos
-    
+
     return () => clearInterval(interval);
   }, []);
 
@@ -68,20 +68,19 @@ export default function Navbar() {
           <div className="flex items-center gap-4">
             <div className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-lg bg-dark-800/50 border border-dark-700/50">
               <div
-                className={`w-2 h-2 rounded-full ${
-                  serverStatus === 'online'
-                    ? 'bg-green-500 animate-pulse'
-                    : serverStatus === 'checking'
+                className={`w-2 h-2 rounded-full ${serverStatus === 'online'
+                  ? 'bg-green-500 animate-pulse'
+                  : serverStatus === 'checking'
                     ? 'bg-yellow-500 animate-pulse'
                     : 'bg-red-500'
-                }`}
+                  }`}
               ></div>
               <span className="text-xs text-gray-400 font-medium">
                 {serverStatus === 'online'
                   ? 'Backend 🟢'
                   : serverStatus === 'checking'
-                  ? 'Verificando...'
-                  : 'Backend 🔴'}
+                    ? 'Verificando...'
+                    : 'Backend 🔴'}
               </span>
             </div>
 
